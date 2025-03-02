@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "mggflow/laravel-microservice-base",
+    "name": "finwax/laravel-microservice-base",
     "type": "project",
     "description": "The Laravel Microservice base.",
     "keywords": [
