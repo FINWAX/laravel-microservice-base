@@ -11,7 +11,7 @@ services:
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-80}:80'
+            - '${APP_PORT:-8009}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER:-1000}'
@@ -25,10 +25,10 @@ services:
             - sail
         depends_on:
             - pgsql
-            - mariadb
+#            - mariadb
             - redis
-            - mailpit
-            - selenium
+#            - mailpit
+#            - selenium
     pgsql:
         image: 'postgres:17'
         container_name: '${APP_NAME:-msvc}_pgsql'
@@ -48,26 +48,26 @@ services:
             test: [ CMD, pg_isready, '-q', '-d', '${DB_DATABASE}', '-U', '${DB_USERNAME}' ]
             retries: 3
             timeout: 5s
-    mariadb:
-        image: 'mariadb:11'
-        ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        volumes:
-            - 'mariadb-data:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mariadb/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-        networks:
-            - sail
-        healthcheck:
-            test: [ CMD, healthcheck.sh, '--connect', '--innodb_initialized' ]
-            retries: 3
-            timeout: 5s
+#    mariadb:
+#        image: 'mariadb:11'
+#        ports:
+#            - '${FORWARD_DB_PORT:-3306}:3306'
+#        environment:
+#            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+#            MYSQL_ROOT_HOST: '%'
+#            MYSQL_DATABASE: '${DB_DATABASE}'
+#            MYSQL_USER: '${DB_USERNAME}'
+#            MYSQL_PASSWORD: '${DB_PASSWORD}'
+#            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+#        volumes:
+#            - 'mariadb-data:/var/lib/mysql'
+#            - './vendor/laravel/sail/database/mariadb/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+#        networks:
+#            - sail
+#        healthcheck:
+#            test: [ CMD, healthcheck.sh, '--connect', '--innodb_initialized' ]
+#            retries: 3
+#            timeout: 5s
     redis:
         image: 'redis:alpine'
         container_name: '${APP_NAME:-msvc}_redis'
@@ -81,25 +81,25 @@ services:
             test: [ CMD, redis-cli, ping ]
             retries: 3
             timeout: 5s
-    mailpit:
-        image: 'axllent/mailpit:latest'
-        container_name: '${APP_NAME:-msvc}_mailpit'
-        ports:
-            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-        networks:
-            - sail
-    selenium:
-        image: selenium/standalone-chromium
-        container_name: '${APP_NAME:-msvc}_selenium'
-        shm_size: "2gb"
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        volumes:
-            - '/dev/shm:/dev/shm'
-            - 'chrome-data:/external/chrome/data'
-        networks:
-            - sail
+#    mailpit:
+#        image: 'axllent/mailpit:latest'
+#        container_name: '${APP_NAME:-msvc}_mailpit'
+#        ports:
+#            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+#            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+#        networks:
+#            - sail
+#    selenium:
+#        image: selenium/standalone-chromium
+#        container_name: '${APP_NAME:-msvc}_selenium'
+#        shm_size: "2gb"
+#        extra_hosts:
+#            - 'host.docker.internal:host-gateway'
+#        volumes:
+#            - '/dev/shm:/dev/shm'
+#            - 'chrome-data:/external/chrome/data'
+#        networks:
+#            - sail
 networks:
     sail:
         driver: bridge
