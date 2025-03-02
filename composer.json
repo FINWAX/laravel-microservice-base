@@ -1,17 +1,21 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "mggflow/laravel-microservice-base",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "The Laravel Microservice base.",
     "keywords": [
         "laravel",
-        "framework"
+        "framework",
+        "microservice",
+        "mggflow",
+        "finwax"
     ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "mggflow/lv-msvc": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
