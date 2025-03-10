@@ -22,7 +22,7 @@ services:
         volumes:
             - '.:/var/www/html'
         networks:
-            - sail
+            - msvc
         depends_on:
             - pgsql
 #            - mariadb
@@ -43,7 +43,7 @@ services:
             - 'pgsql-data:/var/lib/postgresql/data'
             - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
         networks:
-            - sail
+            - msvc
         healthcheck:
             test: [ CMD, pg_isready, '-q', '-d', '${DB_DATABASE}', '-U', '${DB_USERNAME}' ]
             retries: 3
@@ -63,7 +63,7 @@ services:
 #            - 'mariadb-data:/var/lib/mysql'
 #            - './vendor/laravel/sail/database/mariadb/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
 #        networks:
-#            - sail
+#            - msvc
 #        healthcheck:
 #            test: [ CMD, healthcheck.sh, '--connect', '--innodb_initialized' ]
 #            retries: 3
@@ -76,7 +76,7 @@ services:
         volumes:
             - 'redis-data:/data'
         networks:
-            - sail
+            - msvc
         healthcheck:
             test: [ CMD, redis-cli, ping ]
             retries: 3
@@ -88,7 +88,7 @@ services:
 #            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
 #            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
 #        networks:
-#            - sail
+#            - msvc
 #    selenium:
 #        image: selenium/standalone-chromium
 #        container_name: '${APP_NAME:-msvc}_selenium'
@@ -99,9 +99,9 @@ services:
 #            - '/dev/shm:/dev/shm'
 #            - 'chrome-data:/external/chrome/data'
 #        networks:
-#            - sail
+#            - msvc
 networks:
-    sail:
+    msvc:
         driver: bridge
 volumes:
     pgsql-data:
