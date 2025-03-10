@@ -10,6 +10,8 @@ use MGGFLOW\LVMSVC\Middleware\CookiesAttach;
 use MGGFLOW\LVMSVC\Middleware\CookiesDecoder;
 use MGGFLOW\LVMSVC\Middleware\CookiesEncryption;
 use MGGFLOW\LVMSVC\Middleware\ResponseEncoder;
+use MGGFLOW\LVMSVC\Middleware\ZitadelBasicAuthTokenIntro;
+use MGGFLOW\LVMSVC\Middleware\ZitadelJWTAuthTokenIntro;
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -29,6 +31,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'msvc_cookies_encrypter' => CookiesEncryption::class,
             'msvc_cookies_handler' => CookiesAttach::class,
             'msvc_cookies_decoder' => CookiesDecoder::class,
+
+            'auth_zitadel_basic_intro' => ZitadelBasicAuthTokenIntro::class,
+            'auth_zitadel_jwt_intro' => ZitadelJWTAuthTokenIntro::class,
         ]);
 
         $middleware->group('api', [

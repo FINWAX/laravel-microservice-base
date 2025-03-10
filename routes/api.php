@@ -11,6 +11,8 @@ Route::prefix('monitoring')->group(function () {
 });
 
 Route::any('greeting', [GreetingsController::class, 'hello']);
+Route::any('protectedGreeting', [GreetingsController::class, 'protectedHello'])
+    ->middleware('auth_zitadel_basic_intro');
 
 /**
  * API 404 handling.
