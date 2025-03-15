@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-repo_name="mggflow/laravel-microservice-base"
-pull_dir="./msvc"
+REPO_PATH="FINWAX/laravel-microservice-base"
+TARGET_DIR="./msvc"
 
 while getopts d:r: flag; do
     case "${flag}" in
-    d*) pull_dir=${OPTARG} ;;
-    r*) repo_name=${OPTARG} ;;
+    d*) TARGET_DIR=${OPTARG} ;;
+    r*) REPO_PATH=${OPTARG} ;;
     esac
 done
 
-mkdir -p "$pull_dir"
+mkdir -p "$TARGET_DIR"
 
-gh repo clone "$repo_name" "$pull_dir"
+if command -v gh &> /dev/null; then
+  gh repo clone "$REPO_PATH" "$TARGET_DIR"
+else
+  curl -sL "https://github.com/$REPO_PATH/archive/refs/heads/master.tar.gz" | tar -xz -C "$TARGET_DIR" --strip-components=1
+fi

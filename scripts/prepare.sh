@@ -1,20 +1,24 @@
 #!/usr/bin/env bash
 
-start_dir=$(pwd)
+START_DIR=$(pwd)
 
-user_id=$(id -u)
-group_id=$(id -g)
-aim_dir="./msvc"
+USER_ID=$(id -u)
+GROUP_ID=$(id -g)
+TARGET_DIR="./msvc"
 
 while getopts u:g:d: flag; do
     case "${flag}" in
-    u*) user_id=${OPTARG} ;;
-    g*) group_id=${OPTARG} ;;
-    d*) aim_dir=${OPTARG} ;;
+    u*) USER_ID=${OPTARG} ;;
+    g*) GROUP_ID=${OPTARG} ;;
+    d*) TARGET_DIR=${OPTARG} ;;
     esac
 done
 
-cd "$aim_dir" || exit 1;
+if [ ! -d "$TARGET_DIR" ]; then
+  echo "Target dir not found: $TARGET_DIR"
+  exit 1
+fi
+cd "$TARGET_DIR" || exit 1
 
 mkdir -p "./volumes/pgsql"
 mkdir -p "./volumes/mysql"
@@ -22,17 +26,10 @@ mkdir -p "./volumes/mariadb"
 mkdir -p "./volumes/redis"
 mkdir -p "./volumes/selenium/chrome-data"
 
-touch "./env.dev"
-touch "./env.prod"
+cp -a "./.env.example" "./env.dev"
+cp -a "./.env.example" "./env.prod"
 
-chown -R "$user_id":"$group_id" "$aim_dir"
-chmod -R ug+rwx "$aim_dir"
+chown -R "$USER_ID":"$GROUP_ID" "$TARGET_DIR"
+chmod -R ug+rwx "$TARGET_DIR"
 
-docker run --rm \
-    -u "$user_id:$group_id" \
-    -v "$(pwd):/var/www/html" \
-    -w /var/www/html \
-    laravelsail/php82-composer:latest \
-    composer install --ignore-platform-reqs
-
-cd "$start_dir" || exit 1;
+cd "$START_DIR" || exit 1;

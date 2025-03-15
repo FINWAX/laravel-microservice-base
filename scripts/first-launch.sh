@@ -1,36 +1,35 @@
 #!/usr/bin/env bash
 
-start_dir="$(pwd)"
+START_DIR="$(pwd)"
 
-aim_dir="./pulled"
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <target_directory>"
+  exit 1
+fi
 
-while getopts d: flag; do
-    case "${flag}" in
-    d*) aim_dir=${OPTARG} ;;
-    esac
-done
+TARGET_DIR="$1"
 
-cd "$aim_dir" || exit 1
+cd "$TARGET_DIR" || exit 1
 
 if [ ! -s "./env.dev" ]; then
     cp -a "./.env.example" "./env.dev"
 fi
 
-cp -f "./env.dev" "./.env"
+cp -af "./env.dev" "./.env"
 
-docker-compose build --no-cache
-docker-compose up -d
-docker-compose exec lv composer install
+docker compose build --no-cache
+docker compose up -d
+docker compose exec lv composer install
 
-APP_KEY=$(grep --color=never -Po "^APP_KEY=\K.*" ./.env || true)
-[ ${#APP_KEY} -le 3 ] && docker-compose exec lv php artisan key:generate --ansi
+APP_KEY=$(grep --color=never -Po "^MSVC_APP_SECRET_KEY=\K.*" ./.env || true)
+[ ${#APP_KEY} -le 3 ] && docker compose exec lv php artisan key:generate --ansi
 
-docker-compose exec lv php artisan migrate
-docker-compose down
+APP_KEY=$(grep --color=never -Po "^MSVC_APP_SECRET_KEY=\K.*" ./.env || true)
+sed -i 's,^MSVC_APP_SECRET_KEY\=.*,MSVC_APP_SECRET_KEY='"$APP_KEY"',' ./env.dev
+sed -i 's,^MSVC_APP_SECRET_KEY\=.*,MSVC_APP_SECRET_KEY='"$APP_KEY"',' ./env.prod
 
-APP_KEY=$(grep --color=never -Po "^APP_KEY=\K.*" ./.env || true)
-sed -i 's,^APP_KEY\=.*,APP_KEY='"$APP_KEY"',' ./env.dev
-sed -i 's,^APP_KEY\=.*,APP_KEY='"$APP_KEY"',' ./env.prod
+docker compose exec lv php artisan migrate
 
+docker compose down
 
-cd "$start_dir" || exit 1
+cd "$START_DIR" || exit 1

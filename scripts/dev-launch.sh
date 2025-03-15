@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-start_dir="$(pwd)"
+START_DIR="$(pwd)"
 
-aim_dir="./pulled"
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <target_directory>"
+  exit 1
+fi
 
-while getopts d: flag; do
-    case "${flag}" in
-    d*) aim_dir=${OPTARG} ;;
-    esac
-done
+TARGET_DIR="$1"
 
-cd "$aim_dir" || exit 1;
+cd "$TARGET_DIR" || exit 1;
+cp -af "./env.dev" "./.env"
 
-cp -f "./env.dev" "./.env"
+docker compose up -d
 
-docker-compose up -d
-
-cd "$start_dir" || exit 1;
+cd "$START_DIR" || exit 1;
