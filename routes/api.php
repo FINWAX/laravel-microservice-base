@@ -1,17 +1,18 @@
 <?php
 
 use App\Http\Controllers\GreetingsController;
-use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
 use MGGFLOW\ExceptionManager\ManageException;
 
 
-Route::prefix('monitoring')->group(function () {
-    Route::any('ping', [MonitoringController::class, 'ping']);
+Route::prefix('health')->group(function () {
+    Route::any('availability', [HealthController::class, 'availability']);
+    Route::any('check', [HealthController::class, 'check']);
 });
 
-Route::any('greeting', [GreetingsController::class, 'hello']);
-Route::any('protectedGreeting', [GreetingsController::class, 'protectedHello'])
+Route::any('greeting/hello-unprotected', [GreetingsController::class, 'unprotectedHello']);
+Route::any('greeting/hello-protected', [GreetingsController::class, 'protectedHello'])
     ->middleware('auth_zitadel_basic_intro');
 
 /**

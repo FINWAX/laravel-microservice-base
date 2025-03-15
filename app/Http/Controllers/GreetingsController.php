@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class GreetingsController extends Controller
 {
-    public function hello(Request $request): array
+    public function unprotectedHello(Request $request): array
     {
         $res = [
             'greeting' => 'Hello',
