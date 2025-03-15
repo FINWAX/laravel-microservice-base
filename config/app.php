@@ -21,7 +21,7 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'key' => env('APP_KEY'),
+    'key' => env('MSVC_APP_SECRET_KEY'),
 
     'previous_keys' => [
         ...array_filter(
