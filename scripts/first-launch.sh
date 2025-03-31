@@ -21,12 +21,12 @@ docker compose build --no-cache
 docker compose up -d
 docker compose exec lv composer install
 
-APP_KEY=$(grep --color=never -Po "^MSVC_APP_SECRET_KEY=\K.*" ./.env || true)
+APP_KEY=$(grep --color=never -Po "^APP_KEY=\K.*" ./.env || true)
 [ ${#APP_KEY} -le 3 ] && docker compose exec lv php artisan key:generate --ansi
 
-APP_KEY=$(grep --color=never -Po "^MSVC_APP_SECRET_KEY=\K.*" ./.env || true)
-sed -i 's,^MSVC_APP_SECRET_KEY\=.*,MSVC_APP_SECRET_KEY='"$APP_KEY"',' ./env.dev
-sed -i 's,^MSVC_APP_SECRET_KEY\=.*,MSVC_APP_SECRET_KEY='"$APP_KEY"',' ./env.prod
+APP_KEY=$(grep --color=never -Po "^APP_KEY=\K.*" ./.env || true)
+sed -i 's,^APP_KEY\=.*,APP_KEY='"$APP_KEY"',' ./env.dev
+sed -i 's,^APP_KEY\=.*,APP_KEY='"$APP_KEY"',' ./env.prod
 
 docker compose exec lv php artisan migrate
 
