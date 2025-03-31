@@ -34,7 +34,7 @@ chmod -R ug+rwx "$TARGET_DIR"
 
 docker run --rm \
     -u "$USER_ID:$GROUP_ID" \
-    -v "$TARGET_DIR:/var/www/html" \
+    -v "$(pwd):/var/www/html" \
     -w /var/www/html \
     laravelsail/php84-composer:latest \
     composer install --ignore-platform-reqs
