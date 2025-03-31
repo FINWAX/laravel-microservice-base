@@ -32,10 +32,19 @@ cp -a "./.env.example" "./env.prod"
 chown -R "$USER_ID":"$GROUP_ID" "$TARGET_DIR"
 chmod -R ug+rwx "$TARGET_DIR"
 
+if [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
+    DOCKER_PWD=$(pwd -W)
+    VOLUME_MOUNT="/$DOCKER_PWD:/var/www/html"
+    WORKDIR="//var/www/html"
+else
+    DOCKER_PWD=$(pwd)
+    VOLUME_MOUNT="$DOCKER_PWD:/var/www/html"
+    WORKDIR="/var/www/html"
+fi
+
 docker run --rm \
-    -u "$USER_ID:$GROUP_ID" \
-    -v "$(pwd):/var/www/html" \
-    -w /var/www/html \
+    -v "$VOLUME_MOUNT" \
+    -w "$WORKDIR" \
     laravelsail/php84-composer:latest \
     composer install --ignore-platform-reqs
 
